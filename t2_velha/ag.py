@@ -1,7 +1,7 @@
 """Algoritmo genético para evoluir os pesos da rede (cromossomo = lista de reais).
 
 Operadores:
-- população inicial: pesos aleatórios reais em [-1, 1]
+- população inicial: uniforme em [-1, 1] ou aleatória com viés local de ocupação
 - seleção: elitismo (os melhores passam direto) + torneio de tamanho k
 - cruzamento para valores reais: BLX-alfa (mistura) ou aritmético
 - mutação aleatória: cada gene, com probabilidade `taxa_mutacao`, recebe um novo valor ou um ruído aleatório
@@ -13,6 +13,22 @@ LIMITE_PESO = 5.0     # mantém os pesos em uma faixa razoável após cruzamento
 
 def populacao_inicial(n, n_pesos, rng):
     return [[rng.uniform(-1, 1) for _ in range(n_pesos)] for _ in range(n)]
+
+
+def populacao_local(n, rng):
+    """Inicialização aleatória com viés de ocupação para a MLP 9–9–9.
+
+    Cada neurônio começa sensível a uma casa e sua saída tende a desfavorecê-la
+    quando ocupada. Não codifica vitórias, bloqueios ou jogadas do Minimax.
+    Todos os 180 pesos continuam livres para cruzamento e mutação.
+    """
+    pop = [[rng.uniform(-0.3, 0.3) for _ in range(180)] for _ in range(n)]
+    for c in pop:
+        for casa in range(9):
+            c[casa * 10 + casa] = rng.uniform(1, 2.5)
+            c[casa * 10 + 9] = rng.uniform(-0.8, -0.2)
+            c[90 + casa * 10 + casa] = rng.uniform(-3, -1.5)
+    return pop
 
 
 def torneio(populacao, aptidoes, k, rng):

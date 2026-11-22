@@ -11,6 +11,10 @@ import math
 
 class Rede:
     def __init__(self, n_oculta=9, n_saida=9, codificacao="sinal"):
+        if codificacao not in ("sinal", "ocupacao", "dois_planos"):
+            raise ValueError("Codificação desconhecida")
+        if n_oculta < 1 or n_saida != 9:
+            raise ValueError("Exija camada oculta positiva e 9 saídas (uma por casa)")
         self.codificacao = codificacao
         n_entrada = 18 if codificacao == "dois_planos" else 9
         self.n_entrada, self.n_oculta, self.n_saida = n_entrada, n_oculta, n_saida
@@ -25,6 +29,8 @@ class Rede:
         """Copia a lista de pesos (cromossomo) para os neurônios, camada por camada."""
         if len(cromossomo) != self.n_pesos:
             raise ValueError(f"cromossomo com {len(cromossomo)} pesos; a rede precisa de {self.n_pesos}")
+        if any(not isinstance(w, (int, float)) or not math.isfinite(w) for w in cromossomo):
+            raise ValueError("Pesos devem ser números finitos")
         i = 0
         for camada in (self.oculta, self.saida):
             for neuronio in camada:
@@ -45,6 +51,8 @@ class Rede:
 
     def propagar(self, entrada):
         """Propagação: entrada -> camada oculta (tanh) -> camada de saída (linear)."""
+        if len(entrada) != self.n_entrada or any(not math.isfinite(x) for x in entrada):
+            raise ValueError("Entrada incompatível com a rede")
         h = self._camada(self.oculta, entrada, math.tanh)
         return self._camada(self.saida, h, lambda s: s)
 
@@ -53,6 +61,8 @@ class Rede:
         sinal:        9 entradas: meu símbolo = 1, adversário = -1, vazio = 0
         ocupacao:     9 entradas: vazio = 0, meu símbolo = 1, adversário = 2
         dois_planos:  18 entradas: 9 'minhas casas' (0/1) + 9 'casas do adversário' (0/1)"""
+        if len(tabuleiro) != 9 or jogador not in (1, -1) or any(c not in (-1, 0, 1) for c in tabuleiro):
+            raise ValueError("Tabuleiro ou jogador inválido")
         meu = [c * jogador for c in tabuleiro]
         if self.codificacao == "sinal":
             return meu

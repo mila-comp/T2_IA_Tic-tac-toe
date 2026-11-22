@@ -1,0 +1,72 @@
+{
+  "treino": {
+    "N": 120,
+    "n_oculta": 9,
+    "codificacao": "ocupacao",
+    "elite": 2,
+    "torneio_k": 3,
+    "taxa_cruzamento": 0.3,
+    "cruzamento": "aritmetico",
+    "alfa": 0.3,
+    "taxa_mutacao": 0.025,
+    "tipo_mutacao": "ruido",
+    "sigma_mutacao": 0.2,
+    "fases": [
+      {
+        "modos": [
+          "medio",
+          "dificil"
+        ],
+        "geracoes": 300,
+        "partidas_medio": 32,
+        "partidas_dificil": 2,
+        "pesos_modos": {
+          "medio": 0.75,
+          "dificil": 0.25
+        }
+      },
+      {
+        "modos": [
+          "medio",
+          "dificil"
+        ],
+        "geracoes": 150,
+        "partidas_medio": 32,
+        "partidas_dificil": 2,
+        "pesos_modos": {
+          "medio": 0.5,
+          "dificil": 0.5
+        }
+      },
+      {
+        "modos": [
+          "medio",
+          "dificil"
+        ],
+        "geracoes": 150,
+        "partidas_medio": 32,
+        "partidas_dificil": 2,
+        "pesos_modos": {
+          "medio": 0.25,
+          "dificil": 0.75
+        }
+      }
+    ],
+    "min_geracoes": 100,
+    "paciencia": 100,
+    "eps": 0.01,
+    "semente": 42,
+    "inicializacao": "local",
+    "partidas_fixas": true
+  },
+  "aptidao": {
+    "pontos_jogada_valida": 0.05,
+    "pontos_jogada_invalida": -5,
+    "pontos_vitoria": 3,
+    "pontos_empate": 1,
+    "pontos_derrota": -2,
+    "partidas_medio": 10,
+    "partidas_dificil": 2,
+    "taxa_minimax_medio": 0.5
+  }
+}

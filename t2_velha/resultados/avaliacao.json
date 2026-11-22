@@ -1,0 +1,69 @@
+{
+  "semente_avaliacao": 123,
+  "resultados": {
+    "medio": {
+      "vitoria": 69,
+      "empate": 44,
+      "derrota": 84,
+      "invalida": 3,
+      "partidas": 200,
+      "jogadas_validas": 757,
+      "jogadas": 760,
+      "jogadas_otimas": 528,
+      "acuracia_decisao": 0.6947368421052632,
+      "acuracia_jogadas": 0.9960526315789474,
+      "taxa_vitoria": 0.345,
+      "taxa_empate": 0.22,
+      "taxa_derrota": 0.435,
+      "partidas_sem_derrota": 0.565,
+      "por_inicio": {
+        "primeiro": {
+          "partidas": 100,
+          "vitoria": 51,
+          "empate": 20,
+          "derrota": 29,
+          "invalida": 0
+        },
+        "segundo": {
+          "partidas": 100,
+          "vitoria": 18,
+          "empate": 24,
+          "derrota": 55,
+          "invalida": 3
+        }
+      }
+    },
+    "dificil": {
+      "vitoria": 0,
+      "empate": 2,
+      "derrota": 0,
+      "invalida": 0,
+      "partidas": 2,
+      "jogadas_validas": 9,
+      "jogadas": 9,
+      "jogadas_otimas": 9,
+      "acuracia_decisao": 1.0,
+      "acuracia_jogadas": 1.0,
+      "taxa_vitoria": 0.0,
+      "taxa_empate": 1.0,
+      "taxa_derrota": 0.0,
+      "partidas_sem_derrota": 1.0,
+      "por_inicio": {
+        "primeiro": {
+          "partidas": 1,
+          "vitoria": 0,
+          "empate": 1,
+          "derrota": 0,
+          "invalida": 0
+        },
+        "segundo": {
+          "partidas": 1,
+          "vitoria": 0,
+          "empate": 1,
+          "derrota": 0,
+          "invalida": 0
+        }
+      }
+    }
+  }
+}

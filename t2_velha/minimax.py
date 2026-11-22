@@ -28,14 +28,19 @@ def _valor(t, jogador):
     return v
 
 
+def jogadas_otimas(t, jogador):
+    """Todas as decisões de valor máximo; aceita empates entre melhores jogadas."""
+    if resultado(t) is not None:
+        return []
+    valores = {p: -_valor(aplicar(t, p, jogador), -jogador) for p in jogadas_validas(t)}
+    melhor = max(valores.values())
+    return [p for p, valor in valores.items() if valor == melhor]
+
+
 def melhor_jogada(t, jogador):
-    """Jogada do Minimax puro. Em empate de valor, fica com a primeira casa (determinístico)."""
-    melhor_pos, melhor_v = None, None
-    for p in jogadas_validas(t):
-        v = -_valor(aplicar(t, p, jogador), -jogador)
-        if melhor_v is None or v > melhor_v:
-            melhor_pos, melhor_v = p, v
-    return melhor_pos
+    """Minimax puro; desempate determinístico pela primeira casa."""
+    opcoes = jogadas_otimas(t, jogador)
+    return opcoes[0] if opcoes else None
 
 
 def jogada_minimax(t, jogador, modo, rng=None, taxa_minimax=0.5):

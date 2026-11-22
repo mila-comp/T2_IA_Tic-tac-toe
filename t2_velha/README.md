@@ -1,53 +1,109 @@
-# T2 – Jogo da Velha: rede neural + algoritmo genético + Minimax
+# Como a solução funciona
 
-Esqueleto em Python puro (sem bibliotecas externas). Ainda **sem front end**: os módulos já funcionam pelo terminal.
+**População de pesos → partidas contra Minimax → aptidão → seleção → cruzamento
+→ mutação → nova população.** Implementação própria com biblioteca padrão do
+Python, sem backpropagation ou frameworks de aprendizagem.
 
-## Arquivos
-| Arquivo | O que faz | Sugestão de quem cuida |
-|---|---|---|
-| `jogo.py` | regras: tabuleiro (tupla de 9: 0 vazio, 1 X, -1 O), vencedor, empate, jogadas válidas | Pessoa 2 |
-| `minimax.py` | Minimax (negamax com cache) e os modos **difícil** (sempre) e **médio** (50% Minimax, 50% aleatório) | Pessoa 2 |
-| `aptidao.py` | função de aptidão (recompensas e penalidades), partida rede × Minimax, `avaliar()` (acurácia) | Pessoa 2 |
-| `rede.py` | MLP de 2 camadas, só propagação; cada camada é uma lista de neurônios | Pessoa 1 |
-| `ag.py` | população inicial, torneio, elitismo, cruzamento BLX-α (reais), mutação | Pessoa 1 |
-| `treino.py` | ciclo de gerações, fases (ordem dos modos), convergência, histórico, salva resultados | Pessoa 1 |
-| `testes.py` | testes rápidos (`python3 testes.py`) | todas |
+| Arquivo | Responsabilidade |
+|---|---|
+| `jogo.py` | Regras, alternância X/O e rejeição de jogadas ilegais |
+| `minimax.py` | Negamax completo com cache e conjunto de melhores jogadas |
+| `rede.py` | Codificação, propagação e conversão de cromossomos |
+| `ag.py` | População real, elitismo, torneio, cruzamento e mutação |
+| `aptidao.py` | Partidas reais, pontuação e métricas automáticas |
+| `treino.py` | Currículo, parada, seleção final, JSON e CSV |
+| `avaliacao.py` | Testar e comparar modelos prontos, sem alterar pesos |
+| `sessao.py` | Partidas humanas e suas métricas |
+| `interface.py` | Tkinter, tabuleiro, gráfico e controle do treino |
+| `testes.py` | 21 testes de comportamento |
 
-## Como rodar
-    python3 testes.py            # testes dos módulos
-    python3 treino.py            # treina e salva em resultados/ (cerca de 30 s)
-    python3 treino.py --passo    # pausa a cada geração (acompanhar passo a passo)
+## Rede e Minimax
 
-`resultados/` guarda `historico.json` (melhor, média e pior por geração), `populacoes.json` (aptidão de toda a
-população e melhor cromossomo por geração) e `melhor_rede.json` (pesos da rede escolhida).
+Padrão: 9 entradas → 9 neurônios ocultos com tanh → 9 saídas lineares.
+Cada neurônio armazena pesos e bias; são `9×10 + 9×10 = 180` valores reais.
+A codificação padrão é `ocupacao`: vazio=0, própria marca=1, adversário=2.
+`sinal` (0/1/−1) e `dois_planos` (18 entradas binárias) continuam disponíveis.
+Modelos antigos guardam sua própria codificação e permanecem compatíveis.
+A saída é argmax das nove casas, sem máscara ou correção de propostas inválidas.
+Minimax não participa da decisão da rede durante a partida.
 
-## Decisões já tomadas (para explicar no relatório e ajustar)
-- **Cromossomo:** lista de reais com todos os pesos e bias; população inicial uniforme em [-1, 1].
-- **Topologia:** 9 entradas, 9 neurônios na camada oculta (tanh), 9 saídas (linear); a rede joga na casa de maior saída,
-  mesmo ocupada (isso é jogada inválida, penalizada). Total de 180 pesos (com bias).
-- **Codificação da entrada** (`codificacao` em `treino.py`): `sinal` (meu = 1, adversário = -1, vazio = 0),
-  `ocupacao` (vazio = 0, meu = 1, adversário = 2) e `dois_planos` (18 entradas). Com `sinal`, "casa ocupada" não é uma
-  função simples da entrada, e a rede ficou em ~85% de jogadas válidas; com `ocupacao`, ~96 a 98%. **Confirmar com a
-  professora se mudar a codificação é aceito**; a topologia inicial é a que ela passou em aula.
-- **Aptidão:** +1 por jogada válida; jogada inválida -10 e encerra a partida; vitória +10; empate +5; derrota -5.
-  Média por partida. No médio, 10 partidas por cromossomo (metade começa pela rede); no difícil, 2 (uma por lado), pois o
-  resultado é sempre o mesmo. Todos os cromossomos de uma geração jogam com a mesma semente aleatória.
-- **AG:** elitismo (2) + torneio (k = 3); cruzamento BLX-α (α = 0,3), taxa 0,9; mutação aleatória por gene
-  (soma de ruído normal, σ = 0,2, taxa 0,05; há também a versão "troca o gene por valor novo"). **Se o Moodle
-  indicar outro cruzamento para reais, trocar `cruzamento_blx` em `ag.py`.**
-- **Ordem dos modos:** fase 1 só médio (400 gerações no máximo) e fase 2 médio + difícil (400). Cada fase para por
-  convergência (60 gerações sem melhora). Quem começa alterna a cada partida.
-- **Escolha final:** a aptidão de uma geração é ruidosa; no fim, as últimas candidatas são reavaliadas com 100 partidas.
+Minimax busca até estados terminais; prefere vitórias rápidas e adia derrotas.
+Em empate escolhe a primeira casa de valor máximo. No médio, cada turno tem
+50% de chance de usar Minimax e 50% de fazer uma jogada aleatória válida.
+No difícil sempre usa Minimax. O teste exaustivo confirma que o difícil não perde
+para nenhuma sequência legal, de ambos os lados.
 
-## Resultado do esqueleto (semente 42; os números variam muito de semente para semente)
-- Contra o Minimax **médio** (200 partidas): ~96% das jogadas válidas, 65 vitórias, 110 derrotas, 25 partidas com
-  jogada inválida (32,5% sem derrota).
-- Contra o **difícil**: jogadas 100% válidas, mas perde (o difícil não erra; a melhor rede possível empata).
-- Em testes com N = 200 e 400 + 400 gerações, até 54% das partidas sem derrota no médio. A rede **ainda não aprendeu a
-  bloquear e a empatar com o difícil**: é aí que vocês podem ajustar aptidão, topologia, parâmetros e ordem dos modos.
+## Aptidão e AG
 
-## O que falta
-1. Front end (3 modos: você × Minimax, rede aprendendo com o Minimax, você × rede treinada) com acompanhamento das gerações
-   e cálculo da acurácia (`aptidao.avaliar` já calcula jogadas válidas e partidas sem derrota).
-2. Experimentos para o relatório: comparar a ordem dos modos, topologias e parâmetros do AG.
-3. Relatório em PPT e vídeo.
+Pontuação por partida: `0,05 × jogadas válidas + resultado`, com vitória=3,
+empate=1, derrota=−2 e proposta inválida=−5. Invalidar encerra a partida sem
+somar outra penalidade de derrota. Essas constantes são escolhas do projeto.
+
+N=120, elite=2, torneio de 3; cruzamento aritmético com chance 0,3; mutação
+gaussiana por gene com chance 0,025 e σ=0,2; pesos limitados a [−5,5]. BLX-α
+e mutação por substituição continuam disponíveis. A mutação altera em média
+4,5 genes por filho, contra 18 na configuração anterior.
+
+A inicialização `local` é aleatória, com viés explícito de ocupação: um neurônio
+por casa começa com conexão positiva de entrada e negativa para a saída da mesma
+casa; as demais conexões também são aleatórias. Isso facilita reconhecer casas
+preenchidas, sem incorporar estratégia de vitória, bloqueio ou resposta Minimax.
+Todos os 180 pesos continuam livres durante a evolução. Só é compatível com
+9–9–9 e `ocupacao`; para outras topologias use `inicializacao="uniforme"` em CONFIG.
+A alternativa uniforme em [−1,1] permanece disponível.
+
+São 32 partidas médias e 2 difíceis por indivíduo, alternando 17 inícios de cada
+lado. Como rede e difícil são determinísticos, duas partidas bastam para medir os
+dois lados desse oponente. A aptidão pondera as **médias por modo**, não quantas
+vezes repetimos o difícil. Pesos do médio/difícil: 75/25 → 50/50 → 25/75.
+Configurações antigas sem pesos explícitos mantêm a média por partida.
+
+O padrão usa um lote fixo de treino com semente 42. Cada partida tem gerador
+independente a partir de `semente:modo:índice`; todos os indivíduos recebem as
+mesmas condições. Isso estabiliza a comparação e o elitismo, mas pode causar
+sobreajuste. Validação e teste usam sementes diferentes. `partidas_fixas=False`
+permite voltar à troca de lote a cada geração. Um cache temporário de decisões
+por cromossomo acelera partidas repetidas sem alterar seu resultado.
+
+## Treino e parada
+
+Até 600 gerações: 300/150/150 nos três estágios. Cada estágio para no limite ou
+por 100 gerações sem melhora >0,01 na validação com semente 2026, após pelo menos
+100 gerações naquele estágio. A contagem reinicia na transição. Estágios menores
+que 100 terminam pelo limite. Estagnação não prova convergência matemática.
+
+O campeão validado permanece na população entre gerações e na transição de fase.
+A seleção final reavalia campeões das últimas dez gerações e de cada estágio,
+com semente 999: 100 partidas médias e duas difíceis, cada modo com peso 50%.
+A quantidade maior de amostras médias não dilui a contribuição do difícil.
+O recorde bruto da janela combina currículos distintos e não deve ser usado
+sozinho para comparar estágios.
+
+## Resultados e métricas
+
+A execução salva em `resultados/` tem 389 gerações. No teste com semente
+123: médio=69 vitórias, 44 empates, 84 derrotas e 3 inválidas; difícil=2 empates.
+A rede anterior (`resultados/rede_anterior.json`) tinha 11 vitórias e 74 inválidas no médio
+e perdia as duas difíceis. O melhor indivíduo da população inicial local,
+selecionado pela mesma validação 999, tinha 58 vitórias, 42 empates e 100 derrotas
+no médio, e um empate e uma derrota no difícil. Assim, parte do ganho vem do viés
+de inicialização e outra parte da evolução pelo AG.
+
+Após concluir os ajustes, a semente adicional 8675309 mediu 2.000 partidas médias:
+nova=674 vitórias, 509 empates, 782 derrotas, 35 inválidas; anterior=171 vitórias,
+0 empates, 1.041 derrotas, 788 inválidas. Não foram feitos novos ajustes após esse
+teste. Há melhora, mas o modelo ainda não domina o jogo. Os dois empates no difícil
+não cobrem todas as escolhas ótimas possíveis do adversário.
+
+- Decisões ótimas = decisões no conjunto ótimo do Minimax / tentativas.
+- Legalidade = jogadas válidas / tentativas (`acuracia_jogadas`, nome legado).
+- Sem derrota = (vitórias + empates) / partidas concluídas.
+- Taxa de derrota inclui inválidas; `derrota` e `invalida` são contadores separados.
+
+A sessão humana calcula as métricas sem misturar redes ou partidas abandonadas.
+`melhor_rede.json` guarda pesos, topologia, configuração, data UTC e avaliação;
+`config.json`, `historico.json`, `historico.csv`, `populacoes.json` e `avaliacao.json`
+registram o treino. `avaliacao_inicial.json` mede o melhor indivíduo antes do AG;
+`comparacao_independente.json` registra a comparação adicional entre os modelos.
+A leitura valida dimensões e pesos finitos. Os arquivos não permitem restaurar
+exatamente a população de uma execução interrompida após fechar a aplicação.

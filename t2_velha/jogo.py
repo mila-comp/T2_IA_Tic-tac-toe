@@ -31,6 +31,13 @@ def jogadas_validas(t):
 
 def aplicar(t, pos, jogador):
     """Devolve um novo tabuleiro com a jogada feita (não altera o original)."""
+    if len(t) != 9 or any(c not in (0, X, O) for c in t):
+        raise ValueError("Tabuleiro inválido")
+    nx, no = t.count(X), t.count(O)
+    esperado = X if nx == no else O
+    if (nx not in (no, no + 1) or jogador != esperado or type(pos) is not int
+            or not 0 <= pos < 9 or t[pos] != 0 or resultado(t) is not None):
+        raise ValueError("Jogada inválida")
     l = list(t)
     l[pos] = jogador
     return tuple(l)

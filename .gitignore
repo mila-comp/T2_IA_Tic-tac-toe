@@ -1,0 +1,5 @@
+__pycache__/
+.pytest_cache/
+.DS_Store
+t2_velha/resultados_interface/
+t2_velha/resultados_execucao/

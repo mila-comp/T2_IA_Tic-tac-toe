@@ -117,7 +117,7 @@ dá resultados quase idênticos). Os quatro empataram as duas partidas do modo d
 
 A variação entre sementes é real: de 69,9% a 81,7% de decisões ótimas e de 391 a 782
 derrotas. Escolhemos a semente 99 por ter as menos derrotas e mais decisões ótimas, mas
-ela também tem mais jogadas inválidas (2,9%) que a 12345 (0). A escolha foi feita olhando
+ela também tem mais partidas encerradas por jogada inválida (58 de 2.000, 2,9%) que a 12345 (0). A escolha foi feita olhando
 as próprias sementes de avaliação 8675309 e 31415; por isso esses números são otimistas para
 o modelo escolhido e não contam como teste nunca visto. Os modelos e logs das outras
 sementes não foram incluídos no repositório. Para repetir:

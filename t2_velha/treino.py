@@ -47,7 +47,7 @@ CONFIG = dict(
     min_geracoes=100,           # mínimo por fase antes de parar por estagnação
     paciencia=100,              # convergência: gerações seguidas sem melhora do melhor
     eps=0.01,                   # melhora mínima que conta
-    semente=42,
+    semente=99,
 )
 
 

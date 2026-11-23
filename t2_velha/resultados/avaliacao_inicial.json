@@ -1,54 +1,54 @@
 {
-  "descricao": "Melhor da popula\u00e7\u00e3o inicial local, escolhido na valida\u00e7\u00e3o 999, antes do AG",
+  "descricao": "Melhor da popula\u00e7\u00e3o inicial local (semente de treino 99), escolhido na valida\u00e7\u00e3o 999, antes do AG",
   "semente_avaliacao": 123,
   "resultados": {
     "medio": {
-      "vitoria": 58,
-      "empate": 42,
-      "derrota": 100,
-      "invalida": 0,
+      "vitoria": 60,
+      "empate": 55,
+      "derrota": 68,
+      "invalida": 17,
       "partidas": 200,
-      "jogadas_validas": 729,
-      "jogadas": 729,
-      "jogadas_otimas": 479,
-      "acuracia_decisao": 0.6570644718792867,
-      "acuracia_jogadas": 1.0,
-      "taxa_vitoria": 0.29,
-      "taxa_empate": 0.21,
-      "taxa_derrota": 0.5,
-      "partidas_sem_derrota": 0.5,
+      "jogadas_validas": 741,
+      "jogadas": 758,
+      "jogadas_otimas": 578,
+      "acuracia_decisao": 0.762532981530343,
+      "acuracia_jogadas": 0.9775725593667546,
+      "taxa_vitoria": 0.3,
+      "taxa_empate": 0.275,
+      "taxa_derrota": 0.425,
+      "partidas_sem_derrota": 0.575,
       "por_inicio": {
         "primeiro": {
           "partidas": 100,
-          "vitoria": 40,
-          "empate": 27,
-          "derrota": 33,
-          "invalida": 0
+          "vitoria": 41,
+          "empate": 24,
+          "derrota": 18,
+          "invalida": 17
         },
         "segundo": {
           "partidas": 100,
-          "vitoria": 18,
-          "empate": 15,
-          "derrota": 67,
+          "vitoria": 19,
+          "empate": 31,
+          "derrota": 50,
           "invalida": 0
         }
       }
     },
     "dificil": {
       "vitoria": 0,
-      "empate": 1,
-      "derrota": 1,
+      "empate": 2,
+      "derrota": 0,
       "invalida": 0,
       "partidas": 2,
-      "jogadas_validas": 7,
-      "jogadas": 7,
-      "jogadas_otimas": 5,
-      "acuracia_decisao": 0.7142857142857143,
+      "jogadas_validas": 9,
+      "jogadas": 9,
+      "jogadas_otimas": 9,
+      "acuracia_decisao": 1.0,
       "acuracia_jogadas": 1.0,
       "taxa_vitoria": 0.0,
-      "taxa_empate": 0.5,
-      "taxa_derrota": 0.5,
-      "partidas_sem_derrota": 0.5,
+      "taxa_empate": 1.0,
+      "taxa_derrota": 0.0,
+      "partidas_sem_derrota": 1.0,
       "por_inicio": {
         "primeiro": {
           "partidas": 1,
@@ -60,8 +60,8 @@
         "segundo": {
           "partidas": 1,
           "vitoria": 0,
-          "empate": 0,
-          "derrota": 1,
+          "empate": 1,
+          "derrota": 0,
           "invalida": 0
         }
       }

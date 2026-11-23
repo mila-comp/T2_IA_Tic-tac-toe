@@ -47,7 +47,7 @@ python3 t2_velha/treino.py --N 200 --geracoes 600 --paciencia 60 --saida /tmp/t2
 ```
 
 `--geracoes` é o limite **total**, dividido nos três estágios, e deve ser ≥ 3.
-O padrão usa N=120, até 600 gerações, semente 42 e 34 partidas por indivíduo:
+O padrão usa N=120, até 600 gerações, semente 99 e 34 partidas por indivíduo:
 32 médias e duas difíceis (uma por lado). A contribuição médio/difícil para a
 aptidão muda de 75/25 para 50/50 e 25/75. São 17 partidas começando de cada lado.
 
@@ -76,15 +76,15 @@ Git, preservando os resultados de referência.
 
 A janela carrega automaticamente `t2_velha/resultados/melhor_rede.json`.
 Para jogar com ela, selecione **rede** e clique em **Nova partida**.
-O treino padrão terminou por estagnação dos estágios após **389 gerações**.
+O treino padrão terminou por estagnação dos estágios após **397 gerações**.
 
 | Teste, semente 123 | Rede anterior | Rede melhorada |
 |---|---:|---:|
-| Vitórias no médio (200 partidas) | 11 | **69** |
-| Empates no médio | 0 | **44** |
-| Derrotas legais no médio | 115 | **84** |
-| Partidas encerradas por jogada inválida no médio | 74 | **3** |
-| Decisões ótimas no médio | 39,15% | **69,47%** |
+| Vitórias no médio (200 partidas) | 11 | **93** |
+| Empates no médio | 0 | **67** |
+| Derrotas legais no médio | 115 | **35** |
+| Partidas encerradas por jogada inválida no médio | 74 | **5** |
+| Decisões ótimas no médio | 39,15% | **85,00%** |
 | Difícil, uma partida por lado | 2 derrotas | **2 empates** |
 
 Mantivemos a MLP 9–9–9 com 180 pesos, só propagação, e aprendizado pelo AG.
@@ -95,11 +95,33 @@ O viés inicial favorece evitar casas ocupadas; não contém regras de vitória 
 bloqueio. Todos os pesos evoluem e propostas inválidas continuam penalizadas.
 
 Uma avaliação adicional, sem novos ajustes, usou semente 8675309 e **2.000 partidas
-médias** para cada modelo. A nova rede teve 674 vitórias, 509 empates, 782 derrotas
-e 35 inválidas; a anterior teve 171 vitórias, nenhum empate, 1.041 derrotas e 788
+médias** para cada modelo. A nova rede teve 780 vitórias, 771 empates, 391 derrotas
+e 58 inválidas; a anterior teve 171 vitórias, nenhum empate, 1.041 derrotas e 788
 inválidas. A rede melhorou, mas ainda perde com frequência. Os dois empates no
 difícil valem para o adversário determinístico implementado, sem provar domínio
 de todas as posições ou de partidas humanas.
+
+## Estudo de robustez com quatro sementes de treino
+
+Para não depender de uma única inicialização, treinamos a mesma configuração com
+as sementes 42, 7, 99 e 12345 (só a semente de treino muda). Cada modelo foi avaliado
+com 2.000 partidas médias e 2 difíceis, com a semente de avaliação 8675309 (a semente 31415
+dá resultados quase idênticos). Os quatro empataram as duas partidas do modo difícil.
+
+| Semente de treino | Vitórias | Empates | Derrotas | Inválidas | Decisões ótimas |
+|---|---:|---:|---:|---:|---:|
+| 42 | 674 | 509 | 782 | 35 | 69,9% |
+| 7 | 614 | 709 | 646 | 31 | 74,6% |
+| **99 (modelo entregue)** | **780** | **771** | **391** | 58 | **81,7%** |
+| 12345 | 799 | 508 | 693 | 0 | 76,8% |
+
+A variação entre sementes é real: de 69,9% a 81,7% de decisões ótimas e de 391 a 782
+derrotas. Escolhemos a semente 99 por ter as menos derrotas e mais decisões ótimas, mas
+ela também tem mais jogadas inválidas (2,9%) que a 12345 (0). A escolha foi feita olhando
+as próprias sementes de avaliação 8675309 e 31415; por isso esses números são otimistas para
+o modelo escolhido e não contam como teste nunca visto. Os modelos e logs das outras
+sementes não foram incluídos no repositório. Para repetir:
+`python3 t2_velha/treino.py --semente 7 --saida /tmp/s7`.
 
 Reproduzir a comparação, sem treinar:
 

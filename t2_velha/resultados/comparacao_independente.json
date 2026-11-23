@@ -2,37 +2,37 @@
   "semente_avaliacao": 8675309,
   "modelos": {
     "nova": {
-      "arquivo": "t2_velha/resultados/melhor_rede.json",
+      "arquivo": "/home/claude/t2zip_novo/T2_IA_Tic-tac-toe-main/t2_velha/resultados/melhor_rede.json",
       "resultados": {
         "medio": {
-          "vitoria": 674,
-          "empate": 509,
-          "derrota": 782,
-          "invalida": 35,
+          "vitoria": 780,
+          "empate": 771,
+          "derrota": 391,
+          "invalida": 58,
           "partidas": 2000,
-          "jogadas_validas": 7628,
-          "jogadas": 7663,
-          "jogadas_otimas": 5360,
-          "acuracia_decisao": 0.6994649615033277,
-          "acuracia_jogadas": 0.9954325981991388,
-          "taxa_vitoria": 0.337,
-          "taxa_empate": 0.2545,
-          "taxa_derrota": 0.4085,
-          "partidas_sem_derrota": 0.5915,
+          "jogadas_validas": 7934,
+          "jogadas": 7992,
+          "jogadas_otimas": 6528,
+          "acuracia_decisao": 0.8168168168168168,
+          "acuracia_jogadas": 0.9927427427427428,
+          "taxa_vitoria": 0.39,
+          "taxa_empate": 0.3855,
+          "taxa_derrota": 0.2245,
+          "partidas_sem_derrota": 0.7755,
           "por_inicio": {
             "primeiro": {
               "partidas": 1000,
-              "vitoria": 438,
-              "empate": 306,
-              "derrota": 255,
-              "invalida": 1
+              "vitoria": 460,
+              "empate": 374,
+              "derrota": 115,
+              "invalida": 51
             },
             "segundo": {
               "partidas": 1000,
-              "vitoria": 236,
-              "empate": 203,
-              "derrota": 527,
-              "invalida": 34
+              "vitoria": 320,
+              "empate": 397,
+              "derrota": 276,
+              "invalida": 7
             }
           }
         },
@@ -71,7 +71,7 @@
       }
     },
     "anterior": {
-      "arquivo": "t2_velha/resultados/rede_anterior.json",
+      "arquivo": "resultados/rede_anterior.json",
       "resultados": {
         "medio": {
           "vitoria": 171,

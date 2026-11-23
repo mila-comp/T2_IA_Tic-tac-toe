@@ -62,13 +62,13 @@ cobrem ambos os lados desse adversário determinístico; repeti-las seria redund
 Pesos das médias médio/difícil: 75/25 → 50/50 → 25/75. São pesos, não quantidades
 de partidas. Na seleção final cada modo contribui com 50%.
 
-O lote fixo de treino usa semente 42, com geradores independentes por partida.
+O lote fixo de treino usa semente 99, com geradores independentes por partida.
 O lote fixo facilita comparação e elitismo, mas pode gerar sobreajuste.
 Validação por geração: semente 2026. Seleção final: semente 999, 100 partidas
 médias e duas difíceis. O campeão validado é mantido entre gerações e estágios.
 Máximo de 600 gerações: 300/150/150. Cada estágio para no limite ou após 100
 gerações sem melhora >0,01 na validação, com mínimo de 100 por estágio.
-A execução salva terminou com **389 gerações** por estagnação nos estágios.
+A execução salva terminou com **397 gerações** por estagnação nos estágios.
 Estagnação não prova convergência matemática.
 
 ## Comparação com a rede anterior
@@ -84,15 +84,14 @@ Teste comparável com semente 123:
 | Modelo / modo | Partidas | Vitórias | Empates | Derrotas legais | Inválidas | Decisões ótimas |
 |---|---:|---:|---:|---:|---:|---:|
 | Anterior / médio | 200 | 11 | 0 | 115 | 74 | 39,15% |
-| Novo / médio | 200 | 69 | 44 | 84 | 3 | 69,47% |
+| Novo / médio | 200 | 93 | 67 | 35 | 5 | 85,00% |
 | Anterior / difícil | 2 | 0 | 0 | 2 | 0 | 40,00% |
 | Novo / difícil | 2 | 0 | 2 | 0 | 0 | 100,00% |
 
 Para distinguir inicialização de aprendizado: o melhor indivíduo da população
-inicial local, selecionado com a mesma validação 999 antes do AG, obteve 58 vitórias,
-42 empates, 100 derrotas e nenhuma inválida no médio; no difícil, um empate e uma
-derrota. O AG aumentou vitórias e empates e passou a empatar de ambos os lados no
-difícil, embora tenha introduzido algumas inválidas. Ver `avaliacao_inicial.json`.
+inicial local, selecionado com a mesma validação 999 antes do AG, obteve 60 vitórias,
+55 empates, 68 derrotas e 17 inválidas no médio; no difícil, dois empates. O AG aumentou
+vitórias e empates, reduziu derrotas e jogadas inválidas e manteve os empates no difícil. Ver `avaliacao_inicial.json`.
 
 A semente 123 foi usada em comparações exploratórias; portanto não deve ser
 apresentada como teste nunca observado durante os ajustes. Após fechar a
@@ -102,11 +101,26 @@ mediu 2.000 partidas médias por modelo:
 | Modelo | Vitórias | Empates | Derrotas legais | Inválidas | Sem derrota |
 |---|---:|---:|---:|---:|---:|
 | Anterior | 171 | 0 | 1.041 | 788 | 8,55% |
-| Novo | 674 | 509 | 782 | 35 | 59,15% |
+| Novo | 780 | 771 | 391 | 58 | 77,55% |
 
 No difícil o resultado continua sendo duas derrotas antes e dois empates depois.
 O arquivo `comparacao_independente.json` permite conferir todas as métricas.
 Reproduzir: `python3 t2_velha/avaliacao.py --comparar t2_velha/resultados/rede_anterior.json`.
+
+## Estudo de robustez com quatro sementes de treino
+
+Mesma configuração, só a semente de treino muda; avaliação com semente 8675309
+(2.000 médias + 2 difíceis). Todas empataram os dois jogos difíceis.
+
+| Semente | Vitórias | Empates | Derrotas | Inválidas | Decisões ótimas |
+|---|---:|---:|---:|---:|---:|
+| 42 | 674 | 509 | 782 | 35 | 69,9% |
+| 7 | 614 | 709 | 646 | 31 | 74,6% |
+| **99 (entregue)** | 780 | 771 | 391 | 58 | 81,7% |
+| 12345 | 799 | 508 | 693 | 0 | 76,8% |
+
+A escolha da semente 99 usou as sementes de avaliação 8675309 e 31415, logo é
+otimista. Para um número limpo, avaliar numa semente nova.
 
 ## Métricas, validação e limites
 
@@ -121,13 +135,14 @@ elitismo, aptidão ponderada, equivalência do cache, seleção balanceada, inic
 repetibilidade, convergência, interrupção, persistência e métricas humanas.
 A interface carregou o novo modelo e iniciou uma partida contra ele. Uma segunda
 execução integral do padrão reproduziu exatamente os 180 pesos, as avaliações e
-os 389 registros de gerações.
+os 397 registros de gerações (só a data muda).
 
 A melhora não significa domínio do jogo: ainda há derrotas e propostas inválidas.
 Duas partidas contra um Minimax determinístico não cobrem todas as respostas ótimas
 ou todos os estados possíveis. Os ajustes combinam várias mudanças; os experimentos
-exploratórios não isolam a contribuição causal de cada hiperparâmetro. Uma única
-semente de treino não demonstra robustez a outras inicializações. O lote fixo pode
+exploratórios não isolam a contribuição causal de cada hiperparâmetro. Quatro sementes
+de treino mostraram variação real (69,9% a 81,7% de decisões ótimas); a semente 99 foi
+escolhida entre elas olhando as mesmas sementes de avaliação, então seus números são otimistas. O lote fixo pode
 gerar sobreajuste. Arquivos guardam pesos e registros, sem restaurar exatamente
 uma população interrompida depois de fechar a janela.
 

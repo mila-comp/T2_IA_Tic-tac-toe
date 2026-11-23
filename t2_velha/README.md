@@ -58,7 +58,7 @@ dois lados desse oponente. A aptidão pondera as **médias por modo**, não quan
 vezes repetimos o difícil. Pesos do médio/difícil: 75/25 → 50/50 → 25/75.
 Configurações antigas sem pesos explícitos mantêm a média por partida.
 
-O padrão usa um lote fixo de treino com semente 42. Cada partida tem gerador
+O padrão usa um lote fixo de treino com semente 99. Cada partida tem gerador
 independente a partir de `semente:modo:índice`; todos os indivíduos recebem as
 mesmas condições. Isso estabiliza a comparação e o elitismo, mas pode causar
 sobreajuste. Validação e teste usam sementes diferentes. `partidas_fixas=False`
@@ -81,16 +81,16 @@ sozinho para comparar estágios.
 
 ## Resultados e métricas
 
-A execução salva em `resultados/` tem 389 gerações. No teste com semente
-123: médio=69 vitórias, 44 empates, 84 derrotas e 3 inválidas; difícil=2 empates.
+A execução salva em `resultados/` tem 397 gerações. No teste com semente
+123: médio=93 vitórias, 67 empates, 35 derrotas e 5 inválidas; difícil=2 empates.
 A rede anterior (`resultados/rede_anterior.json`) tinha 11 vitórias e 74 inválidas no médio
 e perdia as duas difíceis. O melhor indivíduo da população inicial local,
-selecionado pela mesma validação 999, tinha 58 vitórias, 42 empates e 100 derrotas
-no médio, e um empate e uma derrota no difícil. Assim, parte do ganho vem do viés
+selecionado pela mesma validação 999, tinha 60 vitórias, 55 empates, 68 derrotas
+e 17 inválidas no médio, e dois empates no difícil. Assim, parte do ganho vem do viés
 de inicialização e outra parte da evolução pelo AG.
 
 Após concluir os ajustes, a semente adicional 8675309 mediu 2.000 partidas médias:
-nova=674 vitórias, 509 empates, 782 derrotas, 35 inválidas; anterior=171 vitórias,
+nova=780 vitórias, 771 empates, 391 derrotas, 58 inválidas; anterior=171 vitórias,
 0 empates, 1.041 derrotas, 788 inválidas. Não foram feitos novos ajustes após esse
 teste. Há melhora, mas o modelo ainda não domina o jogo. Os dois empates no difícil
 não cobrem todas as escolhas ótimas possíveis do adversário.

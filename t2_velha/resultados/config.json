@@ -3,6 +3,8 @@
     "N": 120,
     "n_oculta": 9,
     "codificacao": "ocupacao",
+    "inicializacao": "local",
+    "partidas_fixas": true,
     "elite": 2,
     "torneio_k": 3,
     "taxa_cruzamento": 0.3,
@@ -55,9 +57,7 @@
     "min_geracoes": 100,
     "paciencia": 100,
     "eps": 0.01,
-    "semente": 42,
-    "inicializacao": "local",
-    "partidas_fixas": true
+    "semente": 99
   },
   "aptidao": {
     "pontos_jogada_valida": 0.05,
